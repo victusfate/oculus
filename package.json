@@ -1,6 +1,6 @@
 {
   "name": "oculus",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Oculus is a tool to simplify object transition, and communication of state ",
   "main": "oculus.js",
   "scripts": {
