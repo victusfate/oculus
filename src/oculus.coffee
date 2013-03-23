@@ -3,12 +3,12 @@ copy      = require('copyjs')
 
 class State
   constructor: (@name, @listeners = {}) ->
-    console.log { status: 'State constructor', name: @name, listeners:@listeners }
+    # console.log { status: 'State constructor', name: @name, listeners:@listeners }
     if not @name
       throw 'Ill defined State without a name'
 
   updateSelf: (obj,cb) ->
-    console.log { status: 'State.updateSelf, override for specific behavior', obj:obj }
+    # console.log { status: 'State.updateSelf, override for specific behavior', obj:obj }
     false
 
   inform: (obj,cb) ->
