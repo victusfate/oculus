@@ -1,7 +1,7 @@
 {
   "name": "oculus",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.1",
+  "description": "Oculus is a tool to simplify object transition, and communication of state ",
   "main": "oculus.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
