@@ -18,7 +18,7 @@ class PageElement extends State
   # jQuery get/set: $element.val() and $element.val(val) 
   val: (arg) ->
     console.log { status: 'PageElement.val(arg)', arg: arg }
-    if arg
+    if arg?
       $(@name).val(arg)
     else
       $(@name).val()
@@ -26,7 +26,7 @@ class PageElement extends State
   # jQuery get/set: $element.html() and $element.html(val) 
   html: (arg) ->
     console.log { status: 'PageElement.html(arg)', arg: arg }
-    if arg
+    if arg?
       $(@name).html(arg)
     else
       $(@name).html()
@@ -41,7 +41,7 @@ class PageElement extends State
     if typeof obj.val is 'function'
       @val obj.val()
     else
-      @val obj.val if obj.val
+      @val obj.val if obj.val?
     console.log @name, ' going to return ',pre != @val(),'pre',pre,'post',@val()
     pre != @val()
 

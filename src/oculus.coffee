@@ -4,7 +4,7 @@ copy      = require('copyjs')
 class State
   constructor: (@name, @listeners = {}) ->
     # console.log { status: 'State constructor', name: @name, listeners:@listeners }
-    if not @name
+    if not @name?
       throw 'Ill defined State without a name'
 
   updateSelf: (obj,cb) ->
@@ -21,7 +21,7 @@ class State
   # one object listens to another's changes
   listen: (obj) ->
     # console.log { status: 'StateVal.listen', obj:obj }
-    obj.listeners = {} if not obj.listeners
+    obj.listeners = {} if not obj.listeners?
     obj.listeners[@name] = @
 
   # two objects connect and listen to each others changes
@@ -44,7 +44,7 @@ class StateVal extends State
     if typeof obj.val is 'function'
       @val = obj.val()
     else
-      @val = obj.val if obj.val
+      @val = obj.val if obj.val?
     # console.log @name, ' going to return ',pre != @val,'pre',pre,'post',@val
     pre != @val
 
