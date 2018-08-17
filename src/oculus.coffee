@@ -1,41 +1,45 @@
-_         = require('underscore')
 copy      = require('copyjs')
 
 class State
-  constructor: (@name, @listeners = {}) ->
-    # console.log { status: 'State constructor', name: @name, listeners:@listeners }
+  constructor: (@name, @subscribers = {}, publishers = {}) ->
+    # console.log { status: 'State constructor', name: @name, subscribers:@subscribers, publishers: publishers }
     if not @name?
-      throw 'Ill defined State without a name'
+      throw 'ill defined State without a name'
+    for k,v of publishers 
+      v.addSubscriber(@) if (@ != v)
+    
 
   updateSelf: (obj,cb) ->
     # console.log { status: 'State.updateSelf, override for specific behavior', obj:obj }
     false
 
-  inform: (obj,cb) ->
-    # if state changes, update listeners
+  publish: (obj,cb) ->
+    # if state changes, update subscribers (todo avoid cycles, a publishes to b publishes to a...)
+    # console.log { status: 'State publish', name: @name, subscribers:@subscribers  }
     if @updateSelf(obj)
-      for k,v of @listeners
-        v.inform(@) if (obj != v) # avoid recursive object loops... for now
+      for k,v of @subscribers
+        console.log { status: 'State.publish', name: @name, 'going to publish': @ != v, self: @ }
+        v.publish(@) if (@ != v) # avoid recursive object loops... for now
     cb() if cb
 
-  # one object listens to another's changes
-  listen: (obj) ->
-    # console.log { status: 'StateVal.listen', obj:obj }
-    obj.listeners = {} if not obj.listeners?
-    obj.listeners[@name] = @
+  # addSubscriber to changes
+  addSubscriber: (obj) ->
+    # console.log { status: 'StateVal.addSubscriber', obj:obj }
+    @subscribers = {} if not @subscribers?
+    @subscribers[obj.name] = obj
 
-  # two objects connect and listen to each others changes
+  # two objects connect and subscribe to each others changes
   connect: (obj) ->
     # console.log { status: 'StateVal.connect', obj:obj }
-    # circular reference, states listen to each other's changes
-    @listen(obj)
-    obj.listen(@)
+    # circular reference, states subscribe to each other's changes
+    @addSubscriber(obj)
+    obj.addSubscriber(@)
 
 # value based stats
 class StateVal extends State
-  constructor: (name, @val, listeners) ->
-    super(name, listeners)
-    # console.log { status: 'StateVal constructor', name: @name, val:@val, listeners:@listeners }
+  constructor: (name, @val, subscribers, publishers) ->
+    super(name, subscribers, publishers)
+    # console.log { status: 'StateVal constructor', name: @name, val:@val, subscribers:@subscribers, publishers:@publishers }
     @
     
   updateSelf: (obj,cb) ->
@@ -45,7 +49,7 @@ class StateVal extends State
       @val = obj.val()
     else
       @val = obj.val if obj.val?
-    # console.log @name, ' going to return ',pre != @val,'pre',pre,'post',@val
+    # console.log { status: 'StateVal.updateSelf', name: @name, 'going to return': pre != @val, pre: pre, post: @val } 
     pre != @val
 
 

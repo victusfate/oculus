@@ -25,7 +25,7 @@ checkDependencies = (callback) ->
 test = (callback = console.log) ->
   checkDependencies ->
     build ->
-      exec "vows --spec test/*", (err, stdout) ->
+      exec "coffee test/test.coffee", (err, stdout) ->
         callback(stdout)
 
 publish = (callback = console.log) ->
